@@ -11,13 +11,12 @@ let messageQueue = null;
 module.exports.initialize = (queue) => {
   messageQueue = queue;
 };
-const validInputs = ['up', 'down', 'left', 'right']
+const validInputs = ['up', 'down', 'left', 'right'];
 module.exports.router = (req, res, next = ()=>{}) => {
   console.log('Serving request type ' + req.method + ' for url ' + req.url);
   res.writeHead(200, headers);
   if (req.method === 'GET') {
-    res.write(validInputs[Math.floor(Math.random() * validInputs.length)])
+    res.end(validInputs[Math.floor(Math.random() * validInputs.length)]);
   }
-  res.end();
   next(); // invoke next() at the end of a request to help with testing!
 };
