@@ -50,8 +50,8 @@ module.exports.router = (req, res, next = ()=>{}) => {
     }).on('end', () => {
       file = Buffer.concat(file).toString();
     })
-    console.log(file)
-    fs.writeFile('background.jpg', file, (error) => {
+
+    fs.writeFile(module.exports.backgroundImageFile, file, 'binary', (error) => {
       if (error) {
         res.writeHead(404, headers)
         res.end()
