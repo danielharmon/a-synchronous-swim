@@ -29,7 +29,6 @@ module.exports.router = (req, res, next = ()=>{}) => {
       next()
     }
     if (req.url === '/background.jpg') {
-
       fs.readFile(module.exports.backgroundImageFile, (error, data) => {
         if (error) {
           console.log('error')
@@ -41,10 +40,33 @@ module.exports.router = (req, res, next = ()=>{}) => {
           res.end(data);
           next()
         }
-
       })
     }
   }
+  if (req.method === 'POST') {
+    var file = [];
+    req.on('data', (chunk) => {
+      file.push(chunk);
+    }).on('end', () => {
+      file = Buffer.concat(file).toString();
+    })
+    console.log(file)
+    fs.writeFile('background.jpg', file, (error) => {
+      if (error) {
+        res.writeHead(404, headers)
+        res.end()
+        next()
+      } else {
+        res.writeHead(201, headers)
+        res.end()
+        next()
+      }
+    })
+  }
+
+
+
+
 
 };
 
