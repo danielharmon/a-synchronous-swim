@@ -24,8 +24,11 @@ module.exports.router = (req, res, next = ()=>{}) => {
   }
   if (req.method === 'GET') {
     if (req.url === '/') {
+      var data = messageQueue.dequeue()
+      console.log('served swim command', data)
+
       res.writeHead(200, headers);
-      res.end(messageQueue.dequeue());
+      res.end(data);
       next()
     }
     if (req.url === '/background.jpg') {
@@ -48,41 +51,21 @@ module.exports.router = (req, res, next = ()=>{}) => {
     req.on('data', (chunk) => {
       file.push(chunk);
     }).on('end', () => {
-      file = Buffer.concat(file).toString();
-    })
-
-    fs.writeFile(module.exports.backgroundImageFile, file, 'binary', (error) => {
-      if (error) {
-        res.writeHead(404, headers)
-        res.end()
-        next()
-      } else {
-        res.writeHead(201, headers)
-        res.end()
-        next()
-      }
+      file = Buffer.concat(file)
+      file = multipart.getFile(file);
+      fs.writeFile(module.exports.backgroundImageFile, file.data, 'binary', (error) => {
+        if (error) {
+          res.writeHead(404, headers)
+          res.end()
+          next()
+        } else {
+          res.writeHead(201, headers)
+          res.end()
+          next()
+        }
+      })
     })
   }
-
-
-
-
-
 };
 
-  // fs.access(req.url, fs.constants.F_OK, function (error) {
-  //   if (error) {
-  //     res.writeHead(404, headers);
-  //     res.end();
-  //     console.log('file not found');
-  //   } else {
-  //     res.writeHead(200, headers);
-  //     if (req.method === 'GET') {
-  //       res.end(messageQueue.dequeue());
-  //     } else {
-  //       res.end();
-  //     }
-  //   }
-  //   console.log('file found');
 
-  // invoke next() at the end of a request to help with testing!

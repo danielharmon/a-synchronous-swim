@@ -18,7 +18,7 @@
       }
     });
   };
-  setInterval(() => { ajaxSwimRequest() }, 2000);
+  setInterval(() => { ajaxSwimRequest() }, 20000);
 
   /////////////////////////////////////////////////////////////////////
   // The ajax file uplaoder is provided for your convenience!
@@ -31,7 +31,7 @@
     $.ajax({
       type: 'POST',
       data: formData,
-      url: serverUrl,
+      url: `${serverUrl}/background.jpg`,
       cache: false,
       contentType: false,
       processData: false,
