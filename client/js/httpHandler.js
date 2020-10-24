@@ -14,7 +14,7 @@
         SwimTeam.move(data);
         console.log('Swim request received! : ', data);
 
-        // window.location = window.location.href;
+
       }
     });
   };
