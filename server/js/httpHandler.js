@@ -48,11 +48,20 @@ module.exports.router = (req, res, next = ()=>{}) => {
   }
   if (req.method === 'POST') {
     var file = [];
+    //var file = Buffer.alloc(0)
     req.on('data', (chunk) => {
       file.push(chunk);
+      //file = Buffer.concat([file, chunk])
     }).on('end', () => {
+
       file = Buffer.concat(file)
       file = multipart.getFile(file);
+      console.log(file)
+
+      if (file.type === 'application/octet-stream') {
+        file = multipart.getFile(file.data)
+      }
+
       fs.writeFile(module.exports.backgroundImageFile, file.data, 'binary', (error) => {
         if (error) {
           res.writeHead(404, headers)
@@ -60,7 +69,7 @@ module.exports.router = (req, res, next = ()=>{}) => {
           next()
         } else {
           res.writeHead(201, headers)
-          res.end()
+          res.end(file.data)
           next()
         }
       })

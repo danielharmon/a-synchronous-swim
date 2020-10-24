@@ -54,7 +54,7 @@
     var file = form.files[0];
     if (file.type !== 'image/jpeg') {
       console.log('Not a jpg file!');
-      return;
+      //return;
     }
 
     ajaxFileUpload(file);
